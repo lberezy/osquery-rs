@@ -44,7 +44,11 @@ where
     /// Create new registry containing sub-registries for valid plugin types
     fn new_registry() -> super::PluginRegistry {
         let mut registry = BTreeMap::new();
-        registry.insert(crate::plugin::PluginVariant::Table.into(), BTreeMap::new());
+        use strum::IntoEnumIterator;
+        for variant in crate::plugin::PluginVariant::iter() {
+            registry.insert(variant.into(), BTreeMap::new());
+        }
+        
         registry
     }
 }
