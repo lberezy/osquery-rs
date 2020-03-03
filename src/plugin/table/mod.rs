@@ -2,7 +2,7 @@
 
 use crate::error::TableError;
 use crate::gen::osquery;
-use crate::plugin::Plugin;
+use crate::plugin::{Plugin, PluginVariant};
 use std::collections::{BTreeMap, HashMap};
 
 use serde::Deserialize;
@@ -14,8 +14,8 @@ pub struct TablePlugin {
 }
 
 impl Plugin for TablePlugin {
-    fn registry_name(&self) -> &'static str {
-        "table"
+    fn registry_name(&self) -> PluginVariant {
+        PluginVariant::Table
     }
 
     fn routes(&self) -> osquery::ExtensionPluginResponse {

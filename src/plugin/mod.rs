@@ -1,20 +1,15 @@
 mod table;
 use crate::gen::osquery;
 use crate::gen::osquery::{ExtensionPluginRequest, ExtensionPluginResponse, ExtensionStatus};
-use strum_macros::EnumIter;
+use strum_macros::{AsRefStr, Display, EnumIter, IntoStaticStr};
 
 // TODO: add more
-#[derive(Debug, Copy, Clone, EnumIter)]
+#[derive(
+    Ord, Eq, PartialOrd, PartialEq, Debug, Copy, Clone, EnumIter, IntoStaticStr, AsRefStr, Display,
+)]
 pub enum PluginVariant {
+    #[strum(serialize = "table")]
     Table,
-}
-
-impl From<PluginVariant> for String {
-    fn from(p: PluginVariant) -> Self {
-        match p {
-            PluginVariant::Table => String::from("table"),
-        }
-    }
 }
 
 pub trait Plugin {
@@ -25,9 +20,11 @@ pub trait Plugin {
 
     fn routes(&self) -> ExtensionPluginResponse;
 
+    /// Returns the name used to refer to the plugin (e.g. table name implemented by the plugin)
     fn name(&self) -> &str;
 
-    fn registry_name(&self) -> &'static str;
+    /// Returns the variant of the plugin for use in the registry. (e.g. "table", "logger", etc.)
+    fn registry_name(&self) -> PluginVariant;
 
     fn ping(&self) -> ExtensionStatus {
         ExtensionStatus::new(
