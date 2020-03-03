@@ -2,7 +2,8 @@
 
 use crate::gen::osquery;
 use crate::manager::channel::Channel;
-
+use crate::manager::PluginRegistry;
+use crate::plugin::PluginVariant;
 pub struct ExtensionManagerClient<C: Channel> {
     client: osquery::ExtensionManagerSyncClient<C::Input, C::Output>,
 }
@@ -82,7 +83,16 @@ where
 
 ///////////////////////// Handler ////////////////////////////////////////////
 
-pub struct ExtensionManagerHandler {}
+pub struct ExtensionManagerHandler {
+    // TODO: likely need to make this send + sync, i.e. Arc<Mutex<_>>
+    registry: PluginRegistry,
+}
+
+impl ExtensionManagerHandler {
+    pub fn new(registry: PluginRegistry) -> Self {
+        Self { registry }
+    }
+}
 
 impl osquery::ExtensionSyncHandler for ExtensionManagerHandler {
     fn handle_ping(&self) -> thrift::Result<osquery::ExtensionStatus> {
@@ -90,11 +100,17 @@ impl osquery::ExtensionSyncHandler for ExtensionManagerHandler {
     }
     fn handle_call(
         &self,
-        _registry: String,
+        registry: String,
         _item: String,
         _request: osquery::ExtensionPluginRequest,
     ) -> thrift::Result<osquery::ExtensionResponse> {
-        // TODO: Likely need reference to the plugin registry here
+        //self.registry.contains_key()
+        //let variant = PluginVariant::from_str(registry).unwrap();
+
+        // extract the relevant sub-registry based on "registry" string
+        // extract the right plugin from the sub-registry based on "item" string
+        // then call the plugin with the request
+        // Ok(plugin.call(request))
         unimplemented!()
     }
     fn handle_shutdown(&self) -> thrift::Result<()> {

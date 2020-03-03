@@ -45,11 +45,14 @@ where
     /// Call this to start related plugins
     pub fn run(self) {
         // build registry
-        let _registry = self.build_registry();
+        let registry = self.build_registry();
 
         // create client
         // register plugin registry with via client
         // setup handler and router/processor
+
+        // let handler = crate::manager::client::ExtensionManagerHandler::new(registry);
+        // let processor = osquery::ExtensionSyncProcessor::new();
 
         // wait in another thread for pings from osquery, send signal to stop if no heartbeat
 

@@ -10,8 +10,9 @@
 ## TODO
 
 - [x] `Generate Thrift bindings`
-- [ ] `General - Thrift transport`
-- [ ] `Table`
+- [X] `General - Thrift transport`
+- [ ] `General - Manager Client/Server`
+- [X] `Table`
 - [ ] `Logger`
 - [ ] `Distributed`
 - [ ] `Config`

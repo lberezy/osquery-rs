@@ -1,11 +1,23 @@
 mod table;
 use crate::gen::osquery;
 use crate::gen::osquery::{ExtensionPluginRequest, ExtensionPluginResponse, ExtensionStatus};
-use strum_macros::{AsRefStr, Display, EnumIter, IntoStaticStr};
+
+use strum_macros::{AsRefStr, Display, EnumIter, EnumString, IntoStaticStr};
 
 // TODO: add more
 #[derive(
-    Ord, Eq, PartialOrd, PartialEq, Debug, Copy, Clone, EnumIter, IntoStaticStr, AsRefStr, Display,
+    Ord,
+    Eq,
+    PartialOrd,
+    PartialEq,
+    Debug,
+    Copy,
+    Clone,
+    EnumIter,
+    IntoStaticStr,
+    AsRefStr,
+    Display,
+    EnumString,
 )]
 pub enum PluginVariant {
     #[strum(serialize = "table")]
