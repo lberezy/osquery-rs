@@ -1,5 +1,5 @@
-mod channel;
 mod client;
+mod comms;
 mod server;
 
 use crate::plugin::{Plugin, PluginVariant};

@@ -7,10 +7,25 @@ use std::collections::{BTreeMap, HashMap};
 
 use serde::Deserialize;
 
-#[derive(Debug, Clone)]
-pub struct TablePlugin {
-    columns: Vec<ColumnDefinition>,
-    name: String,
+pub struct TablePlugin;
+
+// TODO: Probably needs to be sync + send
+pub trait TablePluginTrait {
+    fn name(&self) -> String;
+    fn columns(&self) -> Vec<ColumnDefinition>;
+    fn generate(&self, context: Option<String>) -> osquery::ExtensionResponse;
+}
+
+impl TablePluginTrait for TablePlugin {
+    fn name(&self) -> String {
+        unimplemented!()
+    }
+    fn columns(&self) -> Vec<ColumnDefinition> {
+        unimplemented!()
+    }
+    fn generate(&self, context: Option<String>) -> osquery::ExtensionResponse {
+        unimplemented!()
+    }
 }
 
 impl Plugin for TablePlugin {
@@ -20,7 +35,7 @@ impl Plugin for TablePlugin {
 
     fn routes(&self) -> osquery::ExtensionPluginResponse {
         let mut routes = osquery::ExtensionPluginResponse::new();
-        for column in &self.columns {
+        for column in &self.columns() {
             let mut map: BTreeMap<String, String> = BTreeMap::new();
             map.insert("id".into(), "column".into());
             map.insert("name".into(), column.name.clone().into());
@@ -32,7 +47,7 @@ impl Plugin for TablePlugin {
     }
 
     fn name(&self) -> &str {
-        self.name.as_ref()
+        TablePluginTrait::name(self).as_ref()
     }
 
     fn call(

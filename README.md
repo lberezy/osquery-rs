@@ -12,7 +12,7 @@
 - [x] `Generate Thrift bindings`
 - [X] `General - Thrift transport`
 - [ ] `General - Manager Client/Server`
-- [X] `Table`
+- [ ] `Table`
 - [ ] `Logger`
 - [ ] `Distributed`
 - [ ] `Config`

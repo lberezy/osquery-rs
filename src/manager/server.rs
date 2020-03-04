@@ -1,10 +1,14 @@
-use super::channel::Channel;
 use super::client::ExtensionManagerClient;
+use super::comms::Channel;
 use super::Plugin;
 
-use crate::gen::osquery;
+use crate::{gen::osquery, manager::client::ExtensionManagerHandler};
+use std::sync::Arc;
+use thrift::server::TProcessor;
 
 use std::collections::BTreeMap;
+use threadpool::ThreadPool;
+
 pub struct ExtensionManagerServer<C: Channel> {
     name: String,
     client: ExtensionManagerClient<C>,
@@ -44,6 +48,8 @@ where
 
     /// Call this to start related plugins
     pub fn run(self) {
+        // TODO: All of this
+        
         // build registry
         let registry = self.build_registry();
 
@@ -51,8 +57,16 @@ where
         // register plugin registry with via client
         // setup handler and router/processor
 
-        // let handler = crate::manager::client::ExtensionManagerHandler::new(registry);
-        // let processor = osquery::ExtensionSyncProcessor::new();
+        let (input, output) =
+            crate::manager::channel::socket::SocketChannel::connect("/path/to/socket")
+                .unwrap()
+                .split()
+                .into();
+
+        let handler = ExtensionManagerHandler::new(registry);
+        let processor = osquery::ExtensionSyncProcessor::new(handler);
+        // create a new channel and feed to processor inside a bunch fo threads/some executor
+        processor.process(&mut input, &mut output);
 
         // wait in another thread for pings from osquery, send signal to stop if no heartbeat
 
@@ -81,4 +95,30 @@ where
         }
         registry
     }
+}
+
+// TODO: Reimplement thrift::server::TServer but with a generic listener type to handle platform specific listeners (UnixListener on Unix and NamedPipeListener?? on Windows)
+#[derive(Debug)]
+pub struct ProcessorServer<P, L>
+where
+    P: TProcessor + Send + Sync + 'static,
+    // TODO: Resolve this design decision
+    L: crate::manager::comms::platform::Listener,
+{
+    processor: Arc<P>,
+    workers: ThreadPool,
+}
+
+impl<P, L> ProcessorServer<P, L>
+where
+    P: TProcessor + Send + Sync + 'static,
+{
+    pub fn new(processor: P) -> ProcessorServer<P> {
+        Self {
+            processor: Arc::new(processor),
+            workers: ThreadPool::new(1),
+        }
+    }
+
+    pub fn listen(&mut self) -> thrift::Result<()> {}
 }

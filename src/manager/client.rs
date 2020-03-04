@@ -1,7 +1,7 @@
 // Client that connects to osquery
 
 use crate::gen::osquery;
-use crate::manager::channel::Channel;
+use crate::manager::comms::Channel;
 use crate::manager::PluginRegistry;
 use crate::plugin::PluginVariant;
 pub struct ExtensionManagerClient<C: Channel> {
@@ -100,7 +100,7 @@ impl osquery::ExtensionSyncHandler for ExtensionManagerHandler {
     }
     fn handle_call(
         &self,
-        registry: String,
+        _registry: String,
         _item: String,
         _request: osquery::ExtensionPluginRequest,
     ) -> thrift::Result<osquery::ExtensionResponse> {

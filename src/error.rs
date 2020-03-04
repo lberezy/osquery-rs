@@ -1,10 +1,13 @@
 use crate::gen::osquery;
+
 //TODO: Properly structure errors
+#[derive(Debug)]
 pub enum Error {
     TableError(TableError),
     ManagerError,
 }
 
+#[derive(Debug)]
 pub enum ManagerError {
     GenericIo,
 }
@@ -17,6 +20,7 @@ impl From<std::io::Error> for ManagerError {
 }
 
 // TODO: Review which of these are generic and can hoiseted to higher level error enum
+#[derive(Debug)]
 pub enum TableError {
     ContextUnmarshall,
     UnknownAction(String),
