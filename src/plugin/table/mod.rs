@@ -47,7 +47,9 @@ impl Plugin for TablePlugin {
     }
 
     fn name(&self) -> &str {
-        TablePluginTrait::name(self).as_ref()
+        unimplemented!()
+        // TODO: Might need an inner trait object to do this
+        // TablePluginTrait::name(self).as_ref()
     }
 
     fn call(

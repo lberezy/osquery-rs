@@ -1,3 +1,4 @@
+mod async_server;
 mod client;
 mod comms;
 mod server;
