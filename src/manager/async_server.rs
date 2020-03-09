@@ -1,9 +1,9 @@
+use parity_tokio_ipc::Endpoint;
 use std::sync::Arc;
 use thrift::server::TProcessor;
 use tokio::prelude::*;
-use parity_tokio_ipc::Endpoint;
 
-use thrift_async;e
+use thrift_async;
 
 pub struct AsyncManagerServer<P>
 where

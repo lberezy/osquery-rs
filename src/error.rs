@@ -5,6 +5,13 @@ use crate::gen::osquery;
 pub enum Error {
     TableError(TableError),
     ManagerError,
+    ThriftError,
+}
+
+impl From<thrift::Error> for Error {
+    fn from(err: thrift::Error) -> Self {
+        Error::ThriftError
+    }
 }
 
 #[derive(Debug)]
